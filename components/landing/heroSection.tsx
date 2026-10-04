@@ -3,10 +3,10 @@ export const HeroSection = async () => {
   const totalLiveJobs = await NoOfLiveJobs();
 
   return (
-    <section className="w-full bg-[#faf9ff] px-4 py-2 sm:px-6 md:py-6 lg:px-8 lg:py-5 flex flex-col items-center justify-center">
-      <div className=" flex w-full max-w-300 flex-col items-center justify-center gap-2">
+    <section className="flex w-full flex-col items-center justify-center px-4 pb-6 pt-8 sm:px-6 sm:pb-10 sm:pt-16 lg:px-8 lg:pb-14 lg:pt-20">
+      <div className="flex w-full max-w-300 flex-col items-center justify-center gap-2">
         {/*            JOBS BADGE */}
-        <div className=" inline-flex max-w-full flex-wrap items-center justify-center gap-x-2 gap-y-1 rounded-full bg-[#eeebff] px-4 py-1.5 text-xs font-semibold text-primary sm:mb-8 sm:text-sm">
+        <div className="inline-flex max-w-full flex-wrap items-center justify-center gap-x-2 gap-y-1 rounded-full bg-primary-soft px-4 py-1.5 text-[11px] font-semibold text-primary sm:mb-6 sm:text-xs">
           <span className="inline-flex items-center gap-2">
             <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
 
@@ -23,20 +23,7 @@ export const HeroSection = async () => {
         </div>
 
         {/*MAIN HEADING */}
-        <h1
-          className="
-            w-full
-            text-center
-            text-[2.5rem]
-            font-extrabold
-            leading-[1.05]
-            tracking-[-0.04em]
-            text-[#111827]
-            sm:text-[3.25rem]
-            md:text-[4rem]
-            lg:text-[4rem]
-          "
-        >
+        <h1 className="w-full text-center text-3xl font-extrabold leading-[1.08] tracking-[-0.04em] text-[#111827] sm:text-4xl md:text-5xl">
           Find tech roles with{" "}
           <span
             className="
@@ -57,7 +44,7 @@ export const HeroSection = async () => {
         {/* DESCRIPTION */}
         <p
           className="
-            mt-6
+            mt-5
             max-w-170
             text-center
             text-sm
@@ -65,7 +52,7 @@ export const HeroSection = async () => {
             leading-6
             text-muted-foreground
 
-            sm:mt-7
+            sm:mt-6
             sm:text-base
             sm:leading-7
           "

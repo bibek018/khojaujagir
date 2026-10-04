@@ -1,6 +1,6 @@
 export const Filters = () => {
   return (
-    <div className="mt-5 flex max-w-212.5 flex-wrap items-center justify-center gap-2 text-xs">
+    <div className="mt-3 flex max-w-212.5 flex-wrap items-center justify-center gap-2 text-xs sm:mt-5">
       <span className="mr-1 font-semibold uppercase tracking-wide text-muted-foreground">
         Popular Filters
       </span>

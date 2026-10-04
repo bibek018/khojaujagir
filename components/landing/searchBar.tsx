@@ -3,8 +3,8 @@ import { Button } from "../ui/button";
 
 export const SearchBar = () => {
   return (
-    <section className="w-full bg-[#faf9ff] px-4 pb-2 sm:px-6 lg:px-8 flex flex-col items-center justify-center">
-      <div className="w-full max-w-300">
+    <section className="w-full bg-[#faf9ff] px-4 pb-2 sm:px-2 lg:px-4 flex flex-col items-center justify-center">
+      <div className="max-w-300">
         <div
           className="
             flex

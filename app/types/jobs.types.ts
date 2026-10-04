@@ -5,6 +5,9 @@ export type JobsCountResponse = {
 };
 
 export interface Job {
+  id?: string;
+  companyName?: string;
+  company?: string;
   title: string;
   description: string;
   location: string;

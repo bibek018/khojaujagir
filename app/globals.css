@@ -5,7 +5,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* JOBPULSE DESIGN SYSTEM */
+/* खोजौ JAGIR DESIGN SYSTEM */
 
 :root {
   /* BRAND COLORS */
@@ -82,12 +82,12 @@
   --border-focus: #6d28d9;
 
   /* INPUTS */
-  --input: #ffffff;
+  --input: #c1c9ec;
   --input-background: #ffffff;
   --input-foreground: #0f172a;
-  --input-placeholder: #94a3b8;
+  --input-placeholder: #e5eaf0;
   --input-border: #dfe2ee;
-  --input-focus: #6d28d9;
+  --input-focus: #5308cd;
 
   --input-soft: #f5f5ff;
 
@@ -475,6 +475,23 @@
   ::selection {
     background: var(--primary-soft);
     color: var(--primary-active);
+  }
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px var(--card) inset !important;
+    -webkit-text-fill-color: var(--input-foreground) !important;
+    background-color: var(--card) !important;
+    caret-color: var(--input-foreground) !important;
+    transition: background-color 9999s ease-in-out 0s;
+  }
+
+  input[data-slot="input"]:focus {
+    border-color: var(--primary) !important;
+    background-color: var(--card) !important;
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--primary) 15%, transparent) !important;
   }
 }
 
