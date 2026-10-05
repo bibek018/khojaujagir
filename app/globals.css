@@ -82,7 +82,7 @@
   --border-focus: #6d28d9;
 
   /* INPUTS */
-  --input: #ffffff;
+  --input: #dfe2ee;
   --input-background: #ffffff;
   --input-foreground: #0f172a;
   --input-placeholder: #94a3b8;
@@ -380,7 +380,7 @@
   --border-focus: #8b5cf6;
 
   /* Inputs */
-  --input: #111827;
+  --input: #334155;
   --input-background: #111827;
   --input-foreground: #f8fafc;
   --input-placeholder: #64748b;

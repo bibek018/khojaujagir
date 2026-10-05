@@ -4,8 +4,5 @@ interface Jobs {
 }
 export const DisplayJobCard = ({ jobs }: Jobs) => {
   return <div>
-    {jobs.map((item:Job)=>{
-        
-    })}
   </div>;
 };
