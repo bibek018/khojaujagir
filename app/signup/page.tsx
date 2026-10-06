@@ -42,7 +42,7 @@ export default function Home() {
           width={36}
           className="h-9 w-9 -translate-y-0.5 object-contain"
         />
-        <h2 className="text-2xl font-bold text-primary">खोजौ JAGIR</h2>
+        <h2 className="text-2xl font-extrabold text-primary">खोजौ JAGIR</h2>
       </div>
 
       {/* Registration Card */}

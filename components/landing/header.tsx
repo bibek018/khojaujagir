@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Navbar from "@/components/landing/navLinks";
-import { Button } from "@/components/ui/button";
 import logo from "@/public/logo.png";
+import { HeaderAuthComponent } from "./headerAuthComponent";
 export default function Header() {
   return (
     <header className="h-fit flex sticky top-0 z-50 flex-col gap-2 md:flex-row md:justify-between md:items-center bg-background px-4 py-2 shadow-sm">
@@ -14,22 +14,14 @@ export default function Header() {
             width={36}
             className="object-contain h-9 w-9 -translate-y-0.5"
           />
-          <h3 className="font-bold text-xl text-center leading-none flex items-center">
+          <h3 className="font-extrabold text-xl text-center leading-none flex items-center text-primary">
             खोजौ JAGIR
           </h3>
         </span>
         <Navbar />
       </div>
       <div className="flex flex-row items-center justify-center gap-5">
-        <Button className="bg-background font-semibold text-foreground px-4 py-2 rounded-radius hover:bg-background hover:border-primary">
-          Login
-        </Button>
-        <Button className="bg-secondary text-secondary-foreground px-4 py-2 rounded-radius hover:bg-secondary-hover">
-          Sign Up
-        </Button>
-        <Button className="bg-primary text-primary-foreground px-4 py-2 rounded-radius hover:bg-primary-hover">
-          Post a Job
-        </Button>
+        <HeaderAuthComponent />
       </div>
     </header>
   );

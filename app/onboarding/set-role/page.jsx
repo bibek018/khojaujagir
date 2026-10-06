@@ -1,0 +1,149 @@
+"use client";
+import { Button } from "@/components/ui/button";
+import { FaUserTie, FaUsers } from "react-icons/fa6";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { useState } from "react";
+import Image from "next/image";
+import icon from "@/app/icon.png";
+import { useRouter } from "next/navigation";
+import api from "@/lib/app.ts";
+import { RoleSaveResponse } from "@/types/auth.types.ts";
+import axios from "axios";
+const roles = [
+  {
+    value: "candidate",
+    title: "Candidate",
+    Icon: FaUserTie,
+    points: [
+      "Create a Showcase",
+      "Discover Opportunities",
+      "Find Your Next Challenge",
+    ],
+  },
+  {
+    value: "employer",
+    title: "Employer",
+    Icon: FaUsers,
+    points: [
+      "Search for talent",
+      "Review portfolios",
+      "Connect with innovators",
+    ],
+  },
+];
+
+export default function Home() {
+  const router = useRouter();
+  const [role, setRole] = useState(null);
+
+  const submitRole = async (e) => {
+    e.preventDefault();
+    if (!role) return;
+    // 1. PATCH the role to your server
+    // 2. update the user in your auth state
+    // 3. router.push(`/onboarding/${role}`);
+  };
+
+  return (
+    <section className="flex flex-col items-center justify-center min-h-screen gap-6">
+      <div className="flex flex-row items-center justify-center gap-2">
+        <Image
+          src={icon}
+          alt="icon"
+          height={36}
+          width={36}
+          className="object-contain h-9 w-9 -translate-y-0.5"
+        />
+        <h2 className="text-primary text-2xl font-extrabold">खोजौ JAGIR</h2>
+      </div>
+
+      <Card className="w-[80%] max-w-sm md:max-w-lg flex flex-col gap-8 bg-card border border-border-light shadow-sm">
+        <CardHeader>
+          <CardTitle className="text-center md:text-start text-foreground">
+            Select Account Type
+          </CardTitle>
+          <CardDescription className="text-center md:text-start text-muted-foreground">
+            Your journey starts here.
+          </CardDescription>
+        </CardHeader>
+
+        <CardContent
+          role="radiogroup"
+          aria-label="Account type"
+          className="flex flex-row items-stretch gap-4"
+        >
+          {roles.map(({ value, title, Icon, points }) => {
+            const selected = role === value;
+            return (
+              <Card
+                key={value}
+                role="radio"
+                aria-checked={selected}
+                tabIndex={0}
+                onClick={() => setRole(value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setRole(value);
+                  }
+                }}
+                className={`flex-1 items-center cursor-pointer border-2 transition-colors outline-none
+                  focus-visible:ring-2 focus-visible:ring-ring h-full pb-4
+                  ${
+                    selected
+                      ? "border-primary bg-primary-subtle"
+                      : "border-border bg-card hover:border-primary-light"
+                  }`}
+              >
+                <CardTitle
+                  className={`text-center ${
+                    selected ? "text-primary" : "text-foreground"
+                  }`}
+                >
+                  {title}
+                </CardTitle>
+
+                <div
+                  className={`rounded-full p-4 transition-colors  ${
+                    selected
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-muted-foreground"
+                  }`}
+                >
+                  <Icon className="size-14 md:size-24" />
+                </div>
+
+                <ul className="hidden md:block list-disc list-inside space-y-1 text-sm text-muted-foreground marker:text-primary">
+                  {points.map((p) => (
+                    <li key={p}>{p}</li>
+                  ))}
+                </ul>
+              </Card>
+            );
+          })}
+        </CardContent>
+
+        <CardFooter>
+          <form
+            onSubmit={submitRole}
+            className="w-full flex flex-row justify-end items-center"
+          >
+            <Button
+              disabled={!role}
+              className="bg-primary text-primary-foreground hover:bg-primary-hover active:bg-primary-active"
+            >
+              Next
+            </Button>
+          </form>
+        </CardFooter>
+      </Card>
+    </section>
+  );
+}

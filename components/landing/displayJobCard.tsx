@@ -1,4 +1,4 @@
-import { Job } from "@/app/types/jobs.types";
+import { Job } from "@/types/jobs.types";
 interface Jobs {
   jobs: Job[];
 }

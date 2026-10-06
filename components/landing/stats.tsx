@@ -1,4 +1,4 @@
-import { NoOfLiveJobs } from "@/app/services/jobs.services";
+import { NoOfLiveJobs } from "@/services/jobs.services";
 import { BadgeCheck, DollarSign, Zap } from "lucide-react";
 export const Stats = async () => {
   const totalLiveJobs = await NoOfLiveJobs();

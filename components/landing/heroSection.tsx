@@ -1,4 +1,4 @@
-import { NoOfLiveJobs } from "@/app/services/jobs.services";
+import { NoOfLiveJobs } from "@/services/jobs.services";
 export const HeroSection = async () => {
   const totalLiveJobs = await NoOfLiveJobs();
 

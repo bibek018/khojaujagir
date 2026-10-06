@@ -36,7 +36,7 @@ export default function Home() {
           width={36}
           className="object-contain h-9 w-9 -translate-y-0.5 "
         />
-        <h2 className="text-primary text-2xl font-bold">खोजौ JAGIR</h2>
+        <h2 className="text-primary text-2xl font-extrabold">खोजौ JAGIR</h2>
       </div>
       <Card className="w-full max-w-sm md:max-w-md  flex flex-col gap-8">
         <CardHeader>

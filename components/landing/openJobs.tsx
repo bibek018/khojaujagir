@@ -1,4 +1,4 @@
-import { findLiveJobs } from "@/app/services/jobs.services";
+import { findLiveJobs } from "@/services/jobs.services";
 import { FilterIndustry } from "./filterIndustry";
 import { DisplayJobCard } from "./displayJobCard";
 export const OpenJobs = async () => {
