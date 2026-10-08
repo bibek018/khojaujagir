@@ -17,13 +17,7 @@ import {
 } from "@/components/ui/card";
 import icon from "@/app/icon.png";
 
-const JOB_TYPES = [
-  "Full-time",
-  "Part-time",
-  "Contract",
-  "Internship",
-  "Freelance",
-];
+const JOB_TYPES = ["Full-time", "Part-time", "Contract", "Internship", "Freelance"];
 const MAX_AVATAR_MB = 2;
 const MAX_RESUME_MB = 5;
 const RESUME_TYPES = [
@@ -97,7 +91,7 @@ export default function CandidateOnboarding() {
 
   const toggleJobType = (type: string) => {
     setJobTypes((prev) =>
-      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type],
+      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
     );
     clearError("jobTypes");
   };
@@ -170,8 +164,8 @@ export default function CandidateOnboarding() {
               Complete Your Profile
             </CardTitle>
             <CardDescription className="text-center md:text-start text-muted-foreground">
-              Tell us a bit about yourself so we can find the right
-              opportunities. All fields are required.
+              Tell us a bit about yourself so we can find the right opportunities.
+              All fields are required.
             </CardDescription>
           </CardHeader>
 

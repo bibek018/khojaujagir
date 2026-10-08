@@ -28,3 +28,5 @@ export interface JobsResponse {
     totalPages: number;
   };
 }
+
+export type JobType= "Full-time" | "Part-time" | "Internship" | "Freelance" | "Contract";

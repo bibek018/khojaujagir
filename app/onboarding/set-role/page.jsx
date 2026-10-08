@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { FaUserTie, FaUsers } from "react-icons/fa6";
 import {
@@ -9,13 +10,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import icon from "@/app/icon.png";
 import { useRouter } from "next/navigation";
 import api from "@/lib/app.ts";
-import { RoleSaveResponse } from "@/types/auth.types.ts";
+import {RoleSaveResponse} from "@/types/onboarding.types.ts"
 import axios from "axios";
+import { useAuthStore } from "@/stores/authStore";
+
 const roles = [
   {
     value: "candidate",
@@ -41,11 +44,48 @@ const roles = [
 
 export default function Home() {
   const router = useRouter();
+  const user = useAuthStore((state) => state.user);
+  // useEffect(() => {
+  //   if (!user) {
+  //     toast.warning("Please log in to continue.");
+  //     router.push("/login");
+  //   }
+  // }, [user]);
   const [role, setRole] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const submitRole = async (e) => {
     e.preventDefault();
-    if (!role) return;
+    if (!role) {
+      toast.info("Please select a role to begin.");
+      return;
+    }
+    const toastID = toast.loading(`Saving user as ${role}`);
+    try {
+      const response =
+        (await api.patch) <
+        RoleSaveResponse >
+        ("/profile/v1/set-role",
+        {
+          role,
+        });
+      toast.success(response?.data?.message, {
+        id: toastId,
+      });
+      router.push(`/onboarding/${role}`);
+    } catch (err) {
+      const message = axios.isAxiosError(err)
+        ? err.response?.data?.message ||
+          (err.request
+            ? "Cannot reach server. Check your connection."
+            : "Something went wrong")
+        : "Something went wrong";
+      toast.error(message, { id: toastId });
+    }
+    finally {
+      setLoading(false);
+    }
+
     // 1. PATCH the role to your server
     // 2. update the user in your auth state
     // 3. router.push(`/onboarding/${role}`);
@@ -136,7 +176,8 @@ export default function Home() {
             className="w-full flex flex-row justify-end items-center"
           >
             <Button
-              disabled={!role}
+              disabled={!role || loading}
+              type="submit"
               className="bg-primary text-primary-foreground hover:bg-primary-hover active:bg-primary-active"
             >
               Next

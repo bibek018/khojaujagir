@@ -4,6 +4,7 @@ export interface User {
   email: string;
   role: "candidate" | "employer" | null;
   phone_no: string | null;
+  onboardingComplete: true | false;
 }
 export interface LoginResponse {
   success: true;
@@ -12,11 +13,6 @@ export interface LoginResponse {
   accessToken: string;
 }
 export interface SignUpResponse {
-  success: true | false;
-  message: string;
-  user: User;
-}
-export interface RoleSaveResponse {
   success: true | false;
   message: string;
   user: User;

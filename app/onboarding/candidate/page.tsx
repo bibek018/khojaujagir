@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -13,7 +13,9 @@ import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import icon from "@/app/icon.png";
 import { FaCamera, FaFileArrowUp, FaXmark, FaUserTie } from "react-icons/fa6";
+import { ImCross } from "react-icons/im";
 import { Button } from "@/components/ui/button";
+import { PreviewCardBackdrop } from "@base-ui/react";
 
 const JOB_TYPES = [
   "Full-time",
@@ -23,13 +25,62 @@ const JOB_TYPES = [
   "Freelance",
 ];
 
+const useFilePreview = (file: File | null) => {
+  const [url, setUrl] = useState<string | null>(null);
+  useEffect(() => {
+    if (!file) {
+      setUrl(null);
+      return;
+    }
+    const objectUrl = URL.createObjectURL(file);
+    setUrl(objectUrl);
+    return () => {
+      URL.revokeObjectURL(objectUrl);
+    };
+  }, [file]);
+  return url;
+};
+
+type FieldKey =
+  | "avatar"
+  | "resume"
+  | "preferredLocation"
+  | "preferredJobType"
+  | "skills";
+type Errors = Partial<Record<FieldKey, string>>;
+
 export default function CandidateOnboarding() {
   const [avatar, setAvatar] = useState<File | null>(null);
   const [resume, setResume] = useState<File | null>(null);
   const [location, setLocation] = useState<string>("");
-  const [error, setError] = useState<String>("");
-  const handleOnboarding = () => {};
+  const [preferredJobTypes, setPreferredJobTypes] = useState<string[]>([]);
+  const [skills, setSkills] = useState<string[]>([]);
+  const [currSkill, setCurrSkill] = useState<string>("");
+  const [errors, setErrors] = useState<Errors>({});
+  const avatarPreview = useFilePreview(avatar);
 
+  const setError = (key: FieldKey, message: string) =>
+    setErrors((prev) => ({ ...prev, [key]: message }));
+
+  const clearError = (key: FieldKey) =>
+    setErrors((prev) => {
+      const next = { ...prev };
+      delete next[key];
+      return next;
+    });
+
+  const handleOnboarding = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const newErrors: Errors = {};
+    if (!avatar) newErrors.avatar = "Profile picture is required.";
+    if (!resume) newErrors.resume = "Resume is required.";
+    if (!location.trim()) 
+      newErrors.preferredLocation = "Preferred location is required.";
+    if (preferredJobTypes.length === 0)
+      newErrors.preferredJobType = "Select at least one job type.";
+    if (skills.length === 0) newErrors.skills = "Add at least one skill.";
+    setErrors(newErrors);
+  };
   const pickAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     e.target.value = "";
@@ -37,14 +88,15 @@ export default function CandidateOnboarding() {
       return;
     }
     if (!file.type.startsWith("image/")) {
-      setError("Please choose an image file.");
+      setError("avatar", "Please choose an image file.");
       return;
     }
     if (file.size >= 1 * 1024 * 1024) {
-      setError("Image must be under 1 MB.");
+      setError("avatar", "Image must be under 1 MB.");
       return;
     }
     setAvatar(file);
+    clearError("avatar");
   };
 
   const pickResume = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,24 +106,50 @@ export default function CandidateOnboarding() {
     if (!file) return;
 
     if (file.type !== "application/pdf") {
-      setError("Please choose a PDF file.");
+      setError("resume", "Please choose a PDF file.");
       return;
     }
 
     if (file.size > 1 * 1024 * 1024) {
-      setError("Resume must be under 1 MB.");
+      setError("resume", "Resume must be under 1 MB.");
       return;
     }
     setResume(file);
+    clearError("resume");
   };
 
   const pickLocation = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLocation(e.target.value);
+    clearError("preferredLocation");
+  };
+
+  const toogleJobType = (type: string) => {
+    setPreferredJobTypes((prev) =>
+      prev.includes(type)
+        ? prev.filter((item) => item !== type)
+        : [...prev, type],
+    );
+    clearError("preferredJobType");
+  };
+
+  const addSkill = () => {
+    const skill = currSkill.trim();
+    if (!skill) return;
+    setSkills((prev) =>
+      prev.some((item) => item.toLowerCase() === skill.toLowerCase())
+        ? prev
+        : [...prev, skill],
+    );
+    setCurrSkill("");
+    clearError("skills");
+  };
+  const removeSkill = (type: string) => {
+    setSkills((prev) => prev.filter((e) => e !== type));
   };
 
   return (
     <section className="flex flex-col items-center justify-center min-h-screen gap-6">
-      <div className="flex flex-row items-center justify-center gap-2">
+      <div className="flex flex-row items-center justify-center gap-2 mt-6 md:mt-0">
         <Image
           src={icon}
           alt="icon"
@@ -81,7 +159,7 @@ export default function CandidateOnboarding() {
         />
         <h2 className="text-primary text-2xl font-extrabold">खोजौ JAGIR</h2>
       </div>
-      <Card className="min-w-[90%] md:min-w-lg">
+      <Card className="max-w-[90%] md:min-w-lg">
         <CardHeader>
           <CardTitle>Complete Your Profile</CardTitle>
           <CardDescription>
@@ -91,6 +169,7 @@ export default function CandidateOnboarding() {
         </CardHeader>
         <CardContent>
           <form
+            id="candidate-onboarding"
             onSubmit={handleOnboarding}
             className="flex flex-col items-center justify-center gap-4"
           >
@@ -99,10 +178,20 @@ export default function CandidateOnboarding() {
                 htmlFor="avatar-upload"
                 className="text-sm relative size-24 rounded-full overflow-hidden bg-muted text-muted-foreground flex flex-row items-center justify-center border-2 border-dashed border-border-primary  hover:border-primary transition-colors  cursor-pointer focus-within:ring-2 focus-within:ring-ring outline-none"
               >
-                <FaUserTie className="size-10 " />
-                <span className="absolute bottom-0 inset-x-0 bg-primary text-primary-foreground py-1 flex justify-center ">
-                  <FaCamera className="size-3.5" />
-                </span>
+                {avatarPreview ? (
+                  <img
+                    src={avatarPreview}
+                    alt="avatar"
+                    className="size-full object-cover"
+                  />
+                ) : (
+                  <>
+                    <FaUserTie className="size-10 " />
+                    <span className="absolute bottom-0 inset-x-0 bg-primary text-primary-foreground py-1 flex justify-center ">
+                      <FaCamera className="size-3.5" />
+                    </span>
+                  </>
+                )}
               </Label>
               <Input
                 id="avatar-upload"
@@ -117,9 +206,14 @@ export default function CandidateOnboarding() {
               <p className="text-xs text-muted-foreground text-center mt-2">
                 {avatar ? avatar.name : "Upload Profile Picture"}
               </p>
+              {errors.avatar && (
+                <p className="text-destructive text-xs md:text-sm ">
+                  {errors.avatar}
+                </p>
+              )}
             </div>
             <div className="flex flex-col items-center w-full">
-              <p className="text-muted-foreground text-start w-full">Resume</p>
+              <p className=" text-start w-full">Resume</p>
               <Label
                 htmlFor="resume-upload"
                 className="w-full border-2 border-dashed px-2 py-3  bg-background text-xs   rounded-md text-muted-foreground border-border hover:border-border-focus "
@@ -148,11 +242,14 @@ export default function CandidateOnboarding() {
                 className="sr-only"
                 onChange={pickResume}
               />
+              {errors.resume && (
+                <p className="text-destructive text-xs md:text-sm text-start w-full mt-1 ml-2">
+                  {errors.resume}
+                </p>
+              )}
             </div>
             <div className="flex flex-col items-center w-full gap-1">
-              <p className="text-muted-foreground text-start w-full">
-                Preferred Location
-              </p>
+              <p className=" text-start w-full">Preferred Location</p>
               <Input
                 name="preferredLocation"
                 value={location}
@@ -161,27 +258,95 @@ export default function CandidateOnboarding() {
                 className="placeholder:text-xs md:placeholder:text-sm"
                 onChange={pickLocation}
               />
+              {errors.preferredLocation && (
+                 <p className="text-destructive text-xs md:text-sm text-start w-full mt-1 ml-2">
+                 {errors.preferredLocation}
+               </p>
+              )}
             </div>
             <div className="flex flex-col items-center w-full gap-1">
-              <p className="text-muted-foreground text-start w-full">
-                Preferred job types
-              </p>
+              <p className=" text-start w-full">Preferred job types</p>
               <div className="flex flex-wrap gap-2 w-full">
-                {JOB_TYPES.map((item) => {
+                {JOB_TYPES.map((type) => {
+                  const selected = preferredJobTypes.includes(type);
                   return (
                     <Button
-                      key={item}
-                      className="bg-card text-foreground border-border hover:border-primary-light"
+                      key={type}
+                      type="button"
+                      onClick={() => toogleJobType(type)}
+                      className={`rounded-full border px-3 py-1.5 text-sm transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                        selected
+                          ? "bg-primary text-primary-foreground border-primary"
+                          : "bg-card text-foreground border-border hover:border-primary-light"
+                      }`}
                     >
-                      {item}
+                      {type}
                     </Button>
                   );
                 })}
               </div>
+              {errors.preferredJobType && (
+                 <p className="text-destructive text-xs md:text-sm text-start w-full mt-1 ml-2">
+                 {errors.preferredJobType}
+               </p>
+              )}
+            </div>
+
+            <div className="flex flex-col items-center w-full gap-1">
+              <p className=" text-start w-full">Skills</p>
+              <div className="flex flex-row gap-2 items-center w-full justify-start">
+                <Input
+                  type="text"
+                  placeholder="Type a skill and press Enter"
+                  className="placeholder:text-xs md:placeholder:text-sm"
+                  onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                    if (e.key === "Enter") {
+                      addSkill();
+                    }
+                  }}
+                  name="skill"
+                  value={currSkill}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setCurrSkill(e.target.value);
+                  }}
+                />
+                <Button
+                  variant="outline"
+                  className="border-border-primary text-primary hover:bg-primary-light"
+                  onClick={addSkill}
+                >
+                  Add
+                </Button>
+              </div>
+              <div className="flex flex-wrap gap-2 w-full ">
+                {skills.map((type) => {
+                  return (
+                    <span
+                      key={type}
+                      className="border-2  rounded-lg px-2 py-1 bg-card text-card-foreground  border-border hover:hover:border-primary hover:bg-card flex flex-row items-center justify-center gap-2 select-none"
+                    >
+                      {type}
+                      <ImCross
+                        className="size-2 cursor-pointer"
+                        onClick={() => removeSkill(type)}
+                      />
+                    </span>
+                  );
+                })}
+              </div>
+              {errors.skills && (
+                <p className="text-destructive text-xs md:text-sm text-start w-full mt-1 ml-2">
+                {errors.skills}
+              </p>
+              )}
             </div>
           </form>
         </CardContent>
-        <CardFooter></CardFooter>
+        <CardFooter className="w-full flex flex-row items-center justify-end">
+          <Button form="candidate-onboarding" type="submit">
+            Finish
+          </Button>
+        </CardFooter>
       </Card>
     </section>
   );
