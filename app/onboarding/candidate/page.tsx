@@ -1,4 +1,5 @@
 "use client";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import {
   Card,
@@ -8,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
@@ -15,7 +17,10 @@ import icon from "@/app/icon.png";
 import { FaCamera, FaFileArrowUp, FaXmark, FaUserTie } from "react-icons/fa6";
 import { ImCross } from "react-icons/im";
 import { Button } from "@/components/ui/button";
-import { PreviewCardBackdrop } from "@base-ui/react";
+import { useAuthStore } from "@/stores/authStore";
+import { useRouter } from "next/navigation";
+import api from "@/lib/app";
+import { OnBoardCandidateResponse } from "@/types/onboarding.types";
 
 const JOB_TYPES = [
   "Full-time",
@@ -52,12 +57,44 @@ type Errors = Partial<Record<FieldKey, string>>;
 export default function CandidateOnboarding() {
   const [avatar, setAvatar] = useState<File | null>(null);
   const [resume, setResume] = useState<File | null>(null);
-  const [location, setLocation] = useState<string>("");
-  const [preferredJobTypes, setPreferredJobTypes] = useState<string[]>([]);
+  const [preferredLocation, setPeferredLocation] = useState<string>("");
+  const [preferredJobType, setPreferredJobType] = useState<string[]>([]);
   const [skills, setSkills] = useState<string[]>([]);
   const [currSkill, setCurrSkill] = useState<string>("");
   const [errors, setErrors] = useState<Errors>({});
   const avatarPreview = useFilePreview(avatar);
+  const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
+  const isInitialized = useAuthStore((s) => s.isInitialized);
+  const user = useAuthStore((state) => state.user);
+  const setUser = useAuthStore((state) => state.setUser);
+
+  useEffect(() => {
+    if (!isInitialized) return;
+    if (!user) {
+      toast.error("Please log in to continue.");
+      router.replace("/login");
+      return;
+    }
+    if (!user.role) {
+      toast.warning("Please select your role first");
+      router.replace("/onboarding/set-role");
+      return;
+    }
+    if (user.onboardingComplete) {
+      router.push(`/dashboard`);
+      return;
+    }
+    if (user.role !== "candidate" && user.role === "employer") {
+      toast.info("Redirecting to employer onboarding", {
+        description:
+          "Your account is registered as an employer. Please complete your employer profile.",
+      });
+      router.replace(`/onboarding/${user.role}`);
+      return;
+    }
+    console.log(user);
+  }, [user, isInitialized, router]);
 
   const setError = (key: FieldKey, message: string) =>
     setErrors((prev) => ({ ...prev, [key]: message }));
@@ -69,17 +106,52 @@ export default function CandidateOnboarding() {
       return next;
     });
 
-  const handleOnboarding = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleOnboarding = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const newErrors: Errors = {};
     if (!avatar) newErrors.avatar = "Profile picture is required.";
     if (!resume) newErrors.resume = "Resume is required.";
-    if (!location.trim()) 
+    if (!preferredLocation.trim())
       newErrors.preferredLocation = "Preferred location is required.";
-    if (preferredJobTypes.length === 0)
+    if (preferredJobType.length === 0)
       newErrors.preferredJobType = "Select at least one job type.";
     if (skills.length === 0) newErrors.skills = "Add at least one skill.";
     setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) return;
+    const formData = new FormData();
+
+    if (avatar) formData.append("avatar", avatar);
+    if (resume) formData.append("resume", resume);
+    formData.append(
+      "preferredLocation",
+      JSON.stringify(preferredLocation.split(",")),
+    );
+    formData.append("skills", JSON.stringify(skills));
+    formData.append("preferredJobType", JSON.stringify(preferredJobType));
+
+    setLoading(true);
+    const toastId = toast.loading("Submitting the details");
+    try {
+      const response = await api.patch<OnBoardCandidateResponse>(
+        "profile/v1/onboarding/candidate",
+        formData,
+      );
+      toast.success(response.data.message, {
+        id: toastId,
+      });
+      setUser(response.data.user);
+      router.replace("/dashboard");
+    } catch (err) {
+      const message = axios.isAxiosError(err)
+        ? err.response?.data?.message ||
+          (err.request
+            ? "Cannot reach server. Check your connection."
+            : "Something went wrong")
+        : "Something went wrong";
+      toast.error(message, { id: toastId });
+    } finally {
+      setLoading(false);
+    }
   };
   const pickAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -119,12 +191,12 @@ export default function CandidateOnboarding() {
   };
 
   const pickLocation = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLocation(e.target.value);
+    setPeferredLocation(e.target.value);
     clearError("preferredLocation");
   };
 
   const toogleJobType = (type: string) => {
-    setPreferredJobTypes((prev) =>
+    setPreferredJobType((prev) =>
       prev.includes(type)
         ? prev.filter((item) => item !== type)
         : [...prev, type],
@@ -252,23 +324,23 @@ export default function CandidateOnboarding() {
               <p className=" text-start w-full">Preferred Location</p>
               <Input
                 name="preferredLocation"
-                value={location}
+                value={preferredLocation}
                 type="text"
                 placeholder="eg. Kathmandu, Dhangadhi, Remote"
                 className="placeholder:text-xs md:placeholder:text-sm"
                 onChange={pickLocation}
               />
               {errors.preferredLocation && (
-                 <p className="text-destructive text-xs md:text-sm text-start w-full mt-1 ml-2">
-                 {errors.preferredLocation}
-               </p>
+                <p className="text-destructive text-xs md:text-sm text-start w-full mt-1 ml-2">
+                  {errors.preferredLocation}
+                </p>
               )}
             </div>
             <div className="flex flex-col items-center w-full gap-1">
               <p className=" text-start w-full">Preferred job types</p>
               <div className="flex flex-wrap gap-2 w-full">
                 {JOB_TYPES.map((type) => {
-                  const selected = preferredJobTypes.includes(type);
+                  const selected = preferredJobType.includes(type);
                   return (
                     <Button
                       key={type}
@@ -286,9 +358,9 @@ export default function CandidateOnboarding() {
                 })}
               </div>
               {errors.preferredJobType && (
-                 <p className="text-destructive text-xs md:text-sm text-start w-full mt-1 ml-2">
-                 {errors.preferredJobType}
-               </p>
+                <p className="text-destructive text-xs md:text-sm text-start w-full mt-1 ml-2">
+                  {errors.preferredJobType}
+                </p>
               )}
             </div>
 
@@ -336,14 +408,14 @@ export default function CandidateOnboarding() {
               </div>
               {errors.skills && (
                 <p className="text-destructive text-xs md:text-sm text-start w-full mt-1 ml-2">
-                {errors.skills}
-              </p>
+                  {errors.skills}
+                </p>
               )}
             </div>
           </form>
         </CardContent>
         <CardFooter className="w-full flex flex-row items-center justify-end">
-          <Button form="candidate-onboarding" type="submit">
+          <Button form="candidate-onboarding" type="submit" disabled={loading}>
             Finish
           </Button>
         </CardFooter>

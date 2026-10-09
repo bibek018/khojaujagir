@@ -1,5 +1,7 @@
 "use client";
+import axios from "axios";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import {
   Card,
   CardContent,
@@ -15,9 +17,12 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import icon from "@/app/icon.png";
 import { FaCamera, FaBuilding, FaUserTie } from "react-icons/fa6";
+import { useAuthStore } from "@/stores/authStore";
+import { useRouter } from "next/navigation";
+import api from "@/lib/app";
+import { OnBoardCandidateResponse } from "@/types/onboarding.types";
 
 const COMPANY_SIZES = ["1-10", "11-50", "51-200", "201-500", "500+"];
-const MAX_IMAGE_MB = 1;
 const MAX_DESCRIPTION = 300;
 type FieldKey =
   | "avatar"
@@ -52,9 +57,39 @@ export default function EmployerOnboarding() {
   const [industry, setIndustry] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [errors, setErrors] = useState<Errors>({});
-
+  const [loading, setLoading] = useState<boolean>(false);
+  const user = useAuthStore((state) => state.user);
+  const isInitialized = useAuthStore((s) => s.isInitialized);
   const avatarPreview = useFilePreview(avatar);
   const logoPreview = useFilePreview(companyLogo);
+  const setUser = useAuthStore((state) => state.setUser);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isInitialized) return;
+    if (!user) {
+      toast.error("Please log in to continue.");
+      router.replace("/login");
+      return;
+    }
+    if (!user.role) {
+      toast.warning("Please select your role first");
+      router.replace("/onboarding/set-role");
+      return;
+    }
+    if (user.onboardingComplete) {
+      router.push(`/dashboard`);
+      return;
+    }
+    if (user.role === "candidate") {
+      toast.info("Redirecting to candidate onboarding", {
+        description:
+          "Your account is registered as an candidate. Please complete your employer profile.",
+      });
+      router.replace(`/onboarding/${user.role}`);
+    }
+  }, [user, isInitialized, router]);
 
   const setError = (key: FieldKey, message: string) => {
     setErrors((prev) => {
@@ -87,7 +122,7 @@ export default function EmployerOnboarding() {
       clearError(field);
     };
 
-  const handleOnboarding = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleOnboarding = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const newErrors: Errors = {};
@@ -117,6 +152,30 @@ export default function EmployerOnboarding() {
     formData.append("description", description.trim());
 
     // TODO: API call, send `formData` as the body (no manual Content-Type)
+    const toastId = toast.loading("Submitting the details...");
+    setLoading(true);
+    try {
+      const response = await api.patch<OnBoardCandidateResponse>(
+        "/profile/v1/onboarding/employer",
+        formData,
+      );
+      setErrors({});
+      toast.success(response.data.message, {
+        id: toastId,
+      });
+      setUser(response.data.user);
+      router.replace("/dashboard");
+    } catch (err) {
+      const message = axios.isAxiosError(err)
+        ? err.response?.data?.message ||
+          (err.request
+            ? "Cannot reach server. Check your connection."
+            : "Something went wrong")
+        : "Something went wrong";
+      toast.error(message, { id: toastId });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -131,7 +190,7 @@ export default function EmployerOnboarding() {
         />
         <h2 className="text-primary text-2xl font-extrabold">खोजौ JAGIR</h2>
       </div>
-      <Card className="max-w-[90%] md:min-w-lg">
+      <Card className="w-[90%] min-w-0 max-w-lg">
         <CardHeader>
           <CardTitle>Set Up Your Company</CardTitle>
           <CardDescription>
@@ -160,11 +219,13 @@ export default function EmployerOnboarding() {
                       className="size-full object-cover"
                     />
                   ) : (
-                    <FaUserTie className="size-10" />
+                    <>
+                      <FaUserTie className="size-10" />
+                      <span className="absolute bottom-0 inset-x-0 bg-primary text-primary-foreground py-1 flex justify-center">
+                        <FaCamera className="size-3.5" />
+                      </span>
+                    </>
                   )}
-                  <span className="absolute bottom-0 inset-x-0 bg-primary text-primary-foreground py-1 flex justify-center">
-                    <FaCamera className="size-3.5" />
-                  </span>
                 </Label>
                 <Input
                   id="avatar-upload"
@@ -198,11 +259,13 @@ export default function EmployerOnboarding() {
                       className="size-full object-contain p-1"
                     />
                   ) : (
-                    <FaBuilding className="size-10" />
+                    <>
+                      <FaBuilding className="size-10" />
+                      <span className="absolute bottom-0 inset-x-0 bg-primary text-primary-foreground py-1 flex justify-center">
+                        <FaCamera className="size-3.5" />
+                      </span>
+                    </>
                   )}
-                  <span className="absolute bottom-0 inset-x-0 bg-primary text-primary-foreground py-1 flex justify-center">
-                    <FaCamera className="size-3.5" />
-                  </span>
                 </Label>
                 <Input
                   id="logo-upload"
@@ -324,7 +387,7 @@ export default function EmployerOnboarding() {
           </form>
         </CardContent>
         <CardFooter className="w-full flex flex-row items-center justify-end">
-          <Button form="employer-onboarding" type="submit">
+          <Button form="employer-onboarding" type="submit" disabled={loading}>
             Finish
           </Button>
         </CardFooter>

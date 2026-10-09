@@ -77,13 +77,18 @@ export default function Home() {
           id: toastId,
         });
         router.push("/onboarding/set-role");
+        return;
       }
       if (!user.onboardingComplete) {
         toast.info("Please complete your profile first", {
           id: toastId,
         });
         router.push(`/onboarding/${user.role}`);
+        return;
       }
+      toast.info("Logged in successfully.", {
+        id: toastId,
+      });
       router.push("/dashboard");
     } catch (err) {
       const message = axios.isAxiosError(err)

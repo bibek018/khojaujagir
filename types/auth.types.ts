@@ -10,10 +10,15 @@ export interface LoginResponse {
   success: true;
   message: string;
   user: User;
-  accessToken: string;
+  accessToken: string|null;
 }
 export interface SignUpResponse {
   success: true | false;
   message: string;
   user: User;
+}
+export interface RefreshResponse {
+  success: true | false;
+  user: User;
+  accessToken: string|null;
 }
