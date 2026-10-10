@@ -1,6 +1,6 @@
 "use client";
 import { useEffect } from "react";
-import api from "../lib/app";
+import api from "@/lib/app";
 import { useAuthStore } from "@/stores/authStore";
 
 export default function AuthInitializer({

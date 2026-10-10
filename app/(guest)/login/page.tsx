@@ -22,7 +22,7 @@ import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import { FaGithub, FaLinkedin, FaFacebook } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import icon from "../icon.png";
+import icon from "@/app/icon.png";
 import { useRouter } from "next/navigation";
 import api from "@/lib/app";
 import { LoginResponse } from "@/types/auth.types";

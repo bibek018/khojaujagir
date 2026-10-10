@@ -65,36 +65,7 @@ export default function CandidateOnboarding() {
   const avatarPreview = useFilePreview(avatar);
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
-  const isInitialized = useAuthStore((s) => s.isInitialized);
-  const user = useAuthStore((state) => state.user);
   const setUser = useAuthStore((state) => state.setUser);
-
-  useEffect(() => {
-    if (!isInitialized) return;
-    if (!user) {
-      toast.error("Please log in to continue.");
-      router.replace("/login");
-      return;
-    }
-    if (!user.role) {
-      toast.warning("Please select your role first");
-      router.replace("/onboarding/set-role");
-      return;
-    }
-    if (user.onboardingComplete) {
-      router.push(`/dashboard`);
-      return;
-    }
-    if (user.role !== "candidate" && user.role === "employer") {
-      toast.info("Redirecting to employer onboarding", {
-        description:
-          "Your account is registered as an employer. Please complete your employer profile.",
-      });
-      router.replace(`/onboarding/${user.role}`);
-      return;
-    }
-    console.log(user);
-  }, [user, isInitialized, router]);
 
   const setError = (key: FieldKey, message: string) =>
     setErrors((prev) => ({ ...prev, [key]: message }));

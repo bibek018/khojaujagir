@@ -10,7 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import icon from "@/app/icon.png";
 import { useRouter } from "next/navigation";
@@ -44,28 +44,8 @@ const roles = [
 
 export default function Home() {
   const router = useRouter();
+  const setUser = useAuthStore((state) => state.setUser);
   const user = useAuthStore((state) => state.user);
-  const isInitialized = useAuthStore((s) => s.isInitialized);
-  useEffect(() => {
-    console.log(user);
-    if (!isInitialized) {
-      return;
-    }
-    if (!user) {
-      toast.warning("Please log in to continue.");
-      router.push("/login");
-      return;
-    }
-
-    if (user?.role) {
-      if (user.onboardingComplete) {
-        router.replace("/dashboard");
-      } else {
-        router.replace(`/onboarding/${user.role}`);
-      }
-      return;
-    }
-  }, [user, isInitialized, router]);
   const [role, setRole] = useState<Role>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -87,6 +67,10 @@ export default function Home() {
       toast.success(response.data?.message, {
         id: toastID,
       });
+      if (user) {
+        setUser(response.data.user);
+      }
+
       router.push(`/onboarding/${role}`);
     } catch (err) {
       const message = axios.isAxiosError(err)

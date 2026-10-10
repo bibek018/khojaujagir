@@ -27,7 +27,7 @@ input:-webkit-autofill:active {
   --primary-subtle: #f5f3ff;
   --primary-muted: #ddd6fe;
   --primary-light: #c4b5fd;
-
+  --primary-footer:#F2F3FF;
   /* Secondary brand/supporting color */
   --secondary: #ede9fe;
   --secondary-foreground: #4c1d95;
@@ -177,7 +177,7 @@ input:-webkit-autofill:active {
   --color-primary-subtle: var(--primary-subtle);
   --color-primary-muted: var(--primary-muted);
   --color-primary-light: var(--primary-light);
-
+  --color-primary-footer:var(--primary-footer);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
 
