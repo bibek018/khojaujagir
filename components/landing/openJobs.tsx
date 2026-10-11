@@ -5,7 +5,7 @@ export const OpenJobs = async () => {
   const liveJobs = await findLiveJobs();
   return (
     <section className="flex flex-col gap-6">
-      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+      <div className="mx-0 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div className="flex max-w-2xl flex-col gap-2">
           <h2 className="text-2xl font-bold text-neutral-active md:text-4xl">
             Explore Live Open Roles

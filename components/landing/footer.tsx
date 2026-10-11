@@ -39,7 +39,8 @@ const legalLinks = [
 export const Footer = () => {
   return (
     <footer className="w-full bg-primary-footer py-6 md:py-8">
-      <Container wide className="flex flex-col gap-6 lg:gap-8">
+      <Container size="full" className="flex flex-col gap-6 lg:gap-8">
+        {" "}
         {/* Top: brand + link columns */}
         <section className="grid grid-cols-2 gap-x-6 gap-y-6 md:grid-cols-3 lg:grid-cols-5">
           {/* Brand */}
@@ -85,7 +86,6 @@ export const Footer = () => {
             </nav>
           ))}
         </section>
-
         {/* Bottom bar */}
         <section className="flex flex-col-reverse gap-3 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
           <span>© 2026 खोजौ JAGIR. All rights reserved.</span>

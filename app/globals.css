@@ -21,7 +21,7 @@ input:-webkit-autofill:active {
   --primary-foreground: #ffffff;
 
   --primary-hover: #5b21b6;
-  --primary-active: #4c1d95;
+  --primary-active: #4  c1d95;
 
   --primary-soft: #ede9fe;
   --primary-subtle: #f5f3ff;
@@ -36,10 +36,10 @@ input:-webkit-autofill:active {
   --secondary-active: #c4b5fd;
 
   /* Green accent / success */
-  --tertiary: #22c55e;
+  --tertiary: rgb(1, 131, 49);
   --tertiary-foreground: #ffffff;
 
-  --tertiary-hover: #16a34a;
+  --tertiary-hover: #057a30;
   --tertiary-active: #15803d;
 
   --tertiary-soft: #dcfce7;

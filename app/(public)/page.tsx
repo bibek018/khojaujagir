@@ -6,6 +6,7 @@ import { Stats } from "@/components/landing/stats";
 import { OpenJobs } from "@/components/landing/openJobs";
 import { Footer } from "@/components/landing/footer";
 import { Container } from "@/components/landing/container";
+import { CTASection } from "@/components/landing/ctaSection";
 
 export default function Home() {
   return (
@@ -23,9 +24,15 @@ export default function Home() {
         </section>
 
         {/* Jobs */}
-        <section className="py-10 md:py-14">
-          <Container>
+        <section className="py-10 md:py-12">
+          <Container size="medium">
             <OpenJobs />
+          </Container>
+        </section>
+        {/* CTA Section*/}
+        <section className="py-10 md:py-12">
+          <Container size="medium">
+            <CTASection/>
           </Container>
         </section>
       </main>

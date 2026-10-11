@@ -1,21 +1,19 @@
 import { cn } from "@/lib/utils";
 
+const sizes = {
+  default: "max-w-6xl px-4 sm:px-6 lg:px-8", // hero, search, stats
+  medium: "max-w-7xl px-4 ", // open jobs
+  full: "max-w-none px-4 sm:px-6", // header, footer
+};
+
 export const Container = ({
   children,
   className,
-  wide = false,
+  size = "default",
 }: {
   children: React.ReactNode;
   className?: string;
-  wide?: boolean;
+  size?: keyof typeof sizes;
 }) => (
-  <div
-    className={cn(
-      "mx-auto w-full px-4 sm:px-6",
-      wide ? "max-w-none" : "max-w-6xl lg:px-8",
-      className,
-    )}
-  >
-    {children}
-  </div>
+  <div className={cn("mx-auto w-full", sizes[size], className)}>{children}</div>
 );

@@ -4,7 +4,7 @@ export const HeroSection = async () => {
   const totalLiveJobs = await NoOfLiveJobs();
 
   return (
-    <div className="flex w-full max-w-4xl flex-col items-center gap-5 text-center">
+    <div className="flex w-full max-w-4xl flex-col items-center gap-3 text-center">
       <div className="inline-flex max-w-full flex-wrap items-center justify-center gap-x-2 gap-y-1 rounded-full bg-[#eeebff] px-4 py-1.5 text-xs font-semibold text-primary sm:text-sm">
         <span className="inline-flex items-center gap-2">
           <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
