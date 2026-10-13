@@ -5,12 +5,13 @@ export interface User {
   role: "candidate" | "employer" | null;
   phone_no: string | null;
   onboardingComplete: true | false;
+  avatarUrl?: string;
 }
 export interface LoginResponse {
   success: true;
   message: string;
   user: User;
-  accessToken: string|null;
+  accessToken: string | null;
 }
 export interface SignUpResponse {
   success: true | false;
@@ -20,5 +21,5 @@ export interface SignUpResponse {
 export interface RefreshResponse {
   success: true | false;
   user: User;
-  accessToken: string|null;
+  accessToken: string | null;
 }

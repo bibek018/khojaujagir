@@ -27,7 +27,7 @@ export default function Header() {
           </span>
           <Navbar />
         </div>
-        <div className="flex flex-row items-center justify-center gap-5">
+        <div className="flex flex-row items-center justify-between md:justify-center gap-5">
           <HeaderAuthComponent />
         </div>
       </Container>

@@ -43,7 +43,6 @@ const roles = [
 ] as const;
 
 export default function Home() {
-  const router = useRouter();
   const setUser = useAuthStore((state) => state.setUser);
   const user = useAuthStore((state) => state.user);
   const [role, setRole] = useState<Role>(null);
@@ -70,8 +69,6 @@ export default function Home() {
       if (user) {
         setUser(response.data.user);
       }
-
-      router.push(`/onboarding/${role}`);
     } catch (err) {
       const message = axios.isAxiosError(err)
         ? err.response?.data?.message ||

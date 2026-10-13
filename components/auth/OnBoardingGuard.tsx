@@ -1,5 +1,5 @@
 "use client";
-import {toast} from "sonner";
+import { toast } from "sonner";
 import { useAuthStore } from "@/stores/authStore";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -28,23 +28,12 @@ export default function OnBoardingGuard({
     }
 
     if (user.onboardingComplete) {
-      toast.info(
-        "Your profile is already complete. Redirecting to your dashboard.",
-        {
-          id: "onboarding-already-complete",
-        },
-      );
-
       router.replace("/dashboard");
       return;
     }
 
     if (pathname === "/onboarding/set-role") {
       if (user.role) {
-        toast.info("You've already selected your account type.", {
-          id: "onboarding-role-already-selected",
-        });
-
         router.replace(`/onboarding/${user.role}`);
       }
       return;

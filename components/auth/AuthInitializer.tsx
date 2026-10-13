@@ -14,6 +14,7 @@ export default function AuthInitializer({
       try {
         const { data } = await api.post("/auth/v1/refresh");
         setAuth(data.user, data.accessToken);
+        console.log(data);
       } catch {
         setAuth(null, null);
       } finally {

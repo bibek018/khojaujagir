@@ -19,10 +19,6 @@ export default function GuestGuard({
     if (!isInitialized || !user) return;
 
     if (user.onboardingComplete) {
-      toast.info("You're already signed in. Redirecting to your dashboard.", {
-        id: "guest-dashboard-redirect",
-      });
-
       router.replace("/dashboard");
       return;
     }

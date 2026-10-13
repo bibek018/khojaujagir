@@ -89,7 +89,6 @@ export default function Home() {
       toast.info("Logged in successfully.", {
         id: toastId,
       });
-      router.push("/dashboard");
     } catch (err) {
       const message = axios.isAxiosError(err)
         ? err.response?.data?.message ||
@@ -103,6 +102,18 @@ export default function Home() {
     }
   };
 
+  const handleGoogleLogin = () => {
+    window.location.href = `${process.env.NEXT_PUBLIC_SERVER_URL}/auth/v1/google`;
+  };
+  const handleFacebookLogin = () => {
+    window.location.href = `${process.env.NEXT_PUBLIC_SERVER_URL}/auth/v1/facebook`;
+  };
+  const handleLinkedInLogin = () => {
+    window.location.href = `${process.env.NEXT_PUBLIC_SERVER_URL}/auth/v1/linkedin`;
+  };
+  const handleGitHubLogin = () => {
+    window.location.href = `${process.env.NEXT_PUBLIC_SERVER_URL}/auth/v1/github`;
+  };
   return (
     <section className="flex min-h-screen flex-col items-center justify-center gap-6 px-4">
       <div className="flex flex-row items-center justify-center gap-2">
@@ -228,6 +239,7 @@ export default function Home() {
             variant="outline"
             size="lg"
             className="h-auto w-full p-1"
+            onClick={handleGoogleLogin}
           >
             <FcGoogle className="size-7" />
             Login with Google
@@ -237,18 +249,21 @@ export default function Home() {
             <Button
               type="button"
               className="h-auto border-2 border-transparent bg-transparent p-2 hover:border-border hover:bg-transparent"
+              onClick={handleFacebookLogin}
             >
               <FaFacebook className="size-7 text-blue-500" />
             </Button>
             <Button
               type="button"
               className="h-auto border-2 border-transparent bg-transparent p-2 hover:border-border hover:bg-transparent"
+              onClick={handleLinkedInLogin}
             >
               <FaLinkedin className="size-7 text-[#0077B5]" />
             </Button>
             <Button
               type="button"
               className="h-auto border-2 border-transparent bg-transparent p-2 hover:border-border hover:bg-transparent"
+              onClick={handleGitHubLogin}
             >
               <FaGithub className="size-7 text-black" />
             </Button>

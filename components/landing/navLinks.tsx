@@ -11,24 +11,15 @@ export default function Navbar() {
     <nav className="relative">
       {/* Desktop Navigation */}
       <div className="hidden md:flex flex-row gap-8">
-        <Link
-          className="text-muted-foreground font-semibold"
-          href="/"
-        >
+        <Link className="text-muted-foreground font-semibold" href="/">
           Explore Jobs
         </Link>
 
-        <Link
-          className="text-muted-foreground font-semibold"
-          href="#"
-        >
+        <Link className="text-muted-foreground font-semibold" href="#">
           Companies
         </Link>
 
-        <Link
-          className="text-muted-foreground font-semibold"
-          href="#"
-        >
+        <Link className="text-muted-foreground font-semibold" href="#">
           Salaries
         </Link>
       </div>
@@ -44,7 +35,7 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="absolute right-0 top-full mt-3 flex w-52 flex-col gap-2 rounded-lg border bg-card p-4 shadow-lg md:hidden">
+        <div className="absolute bg-background right-0 top-full mt-3 flex w-52 flex-col gap-2 rounded-lg border  p-4 shadow-lg md:hidden">
           <Link
             className="text-muted-foreground font-semibold"
             href="/"
