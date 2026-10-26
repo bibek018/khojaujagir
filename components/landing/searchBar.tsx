@@ -1,14 +1,23 @@
+"use client";
 import { Search, MapPin, Banknote, ArrowRight } from "lucide-react";
 import { Button } from "../ui/button";
+import { useState } from "react";
 
 export const SearchBar = () => {
+  const [jobTitle, setJobTitle] = useState<string>("");
+  const [location, setLocation] = useState<string>("");
+  const [salary, setSalary] = useState<number | null>(null);
+  const handleJobSearch = (e: React.FormEvent<HTMLFormElement>) => {
+    
+  };
   return (
-    <div
+    <form
       className="
       flex w-full flex-col gap-3 rounded-2xl bg-white p-3
       shadow-[0_10px_35px_rgba(80,50,150,0.12)]
       sm:flex-row sm:items-center sm:gap-2 sm:rounded-xl sm:p-2
     "
+      onSubmit={handleJobSearch}
     >
       <div className="flex h-10 md:h-13 w-full sm:flex-[2.2] min-w-0 sm:min-w-55 items-center gap-3 rounded-xl bg-[#f6f5fc] px-4">
         <Search className="h-5 w-5 shrink-0 text-muted-foreground" />
@@ -41,7 +50,7 @@ export const SearchBar = () => {
 
       {/* Search Button: shrink-0 prevents flex squeeze */}
       <Button
-        type="button"
+        type="submit"
         className="
               flex
               h-10
@@ -66,6 +75,6 @@ export const SearchBar = () => {
         Search Jobs
         <ArrowRight className="h-4 w-4" />
       </Button>
-    </div>
+    </form>
   );
 };

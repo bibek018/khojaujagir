@@ -36,6 +36,7 @@ export type RoleSaveResponse = {
   success: true | false;
   message: string;
   user: User;
+  accessToken: string;
 };
 
 export type Role = "employer" | "candidate" | null;

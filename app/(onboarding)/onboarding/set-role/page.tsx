@@ -43,7 +43,7 @@ const roles = [
 ] as const;
 
 export default function Home() {
-  const setUser = useAuthStore((state) => state.setUser);
+  const setAuth = useAuthStore((state) => state.setAuth);
   const user = useAuthStore((state) => state.user);
   const [role, setRole] = useState<Role>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -67,7 +67,7 @@ export default function Home() {
         id: toastID,
       });
       if (user) {
-        setUser(response.data.user);
+        setAuth(response.data.user, response.data.accessToken);
       }
     } catch (err) {
       const message = axios.isAxiosError(err)

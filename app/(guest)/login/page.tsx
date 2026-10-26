@@ -90,13 +90,36 @@ export default function Home() {
         id: toastId,
       });
     } catch (err) {
-      const message = axios.isAxiosError(err)
-        ? err.response?.data?.message ||
-          (err.request
-            ? "Cannot reach server. Check your connection."
-            : "Something went wrong")
-        : "Something went wrong";
-      toast.error(message, { id: toastId });
+      if (axios.isAxiosError(err)) {
+        const data = err.response?.data;
+        if (
+          data?.message === "Validation failed" &&
+          Array.isArray(data.details)
+        ) {
+          const fieldErrors: Errors = {};
+
+          data.details.forEach((item: { field: string; message: string }) => {
+            if (item.field === "email" || item.field === "password") {
+              fieldErrors[item.field] = item.message;
+            }
+          });
+
+          setErrors(fieldErrors);
+          toast.dismiss(toastId);
+        } else {
+          const message =
+            data?.message ??
+            data?.error ??
+            (err.request
+              ? "Cannot reach server. Check your connection."
+              : "Something went wrong");
+
+          toast.error(message, { id: toastId });
+        }
+      } else {
+        console.error("Unexpected error:", err);
+        toast.error("Something went wrong", { id: toastId });
+      }
     } finally {
       setLoading(false);
     }
