@@ -1,3 +1,15 @@
+export interface CandidateProfile {
+  skills: string[];
+  preferredLocation: string[];
+  preferredJobType: string[];
+  resumeUrl: string;
+}
+export interface EmployerProfile {
+  companyName: string;
+  companySize: "1-10" | "11-50" | "51-200" | "201-500" | "500+";
+  industry: string;
+  description: string;
+}
 export interface User {
   _id: string;
   name: string;
@@ -6,6 +18,7 @@ export interface User {
   phone_no: string | null;
   onboardingComplete: true | false;
   avatarUrl?: string;
+  profile?: CandidateProfile | EmployerProfile;
 }
 export interface LoginResponse {
   success: true;

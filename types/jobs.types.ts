@@ -5,6 +5,7 @@ export type JobsCountResponse = {
 };
 
 export interface Job {
+  _id: string;
   title: string;
   description: string;
   location: string;
@@ -16,6 +17,7 @@ export interface Job {
   };
   type: "Full-time" | "Part-time" | "Internship" | "Freelance" | "Contract";
   status: "Open" | "Closed" | "Draft";
+  postedBy: string;
 }
 export interface JobsResponse {
   sucess: true | false;
@@ -29,4 +31,16 @@ export interface JobsResponse {
   };
 }
 
-export type JobType= "Full-time" | "Part-time" | "Internship" | "Freelance" | "Contract";
+export type JobType =
+  | "Full-time"
+  | "Part-time"
+  | "Internship"
+  | "Freelance"
+  | "Contract";
+
+export type Application = {
+  status: "Open" | "Closed" | "Draft";
+  appliedDate: string;
+  resumeUrl: string;
+  jobId: string;
+};
