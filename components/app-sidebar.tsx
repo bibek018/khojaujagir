@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-
+import icon from "@/app/icon.png";
 import { NavMain } from "@/components/nav-main";
 import { NavSecondary } from "@/components/nav-secondary";
 import { NavUser } from "@/components/nav-user";
@@ -21,11 +21,8 @@ import {
   Settings2Icon,
   LifeBuoyIcon,
   SendIcon,
-  FrameIcon,
-  PieChartIcon,
-  MapIcon,
-  TerminalIcon,
 } from "lucide-react";
+import Image from "next/image";
 import { useAuthStore } from "@/stores/authStore";
 import { User } from "@/types/auth.types";
 
@@ -79,10 +76,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" render={<a href="#" />}>
-              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                <TerminalIcon className="size-4" />
+              <div className="flex aspect-square size-8 items-center justify-center rounded-lg ">
+                <Image src={icon} className="size-8" alt="icon"/>
               </div>
-              <div className="grid flex-1 text-left text-sm leading-tight">
+              <div className="grid flex-1 text-left text-sm leading-tight pt-4">
                 <span className="truncate font-medium">खोजौ JAGIR</span>
                 <span className="truncate text-xs">
                   {user?.role?.toUpperCase()} DASHBOARD
