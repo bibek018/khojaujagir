@@ -80,7 +80,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <Image src={icon} className="size-8" alt="icon"/>
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight pt-4">
-                <span className="truncate font-medium">खोजौ JAGIR</span>
+                <span className="truncate font-bold text-primary ">खोजौ JAGIR</span>
                 <span className="truncate text-xs">
                   {user?.role?.toUpperCase()} DASHBOARD
                 </span>

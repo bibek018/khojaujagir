@@ -13,7 +13,7 @@ export default function Header() {
       >
         {" "}
         <div className="flex flex-row items-center justify-between md:gap-15">
-          <span className="flex flex-row items-center justify-center gap-2">
+          <a className="flex flex-row items-center justify-center gap-2" href="/">
             <Image
               src={logo}
               alt="logo"
@@ -24,7 +24,7 @@ export default function Header() {
             <h3 className="font-extrabold text-xl text-center leading-none flex items-center text-primary">
               खोजौ JAGIR
             </h3>
-          </span>
+          </a>
           <Navbar />
         </div>
         <div className="flex flex-row items-center justify-between md:justify-center gap-5">
